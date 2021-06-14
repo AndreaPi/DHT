@@ -4,17 +4,16 @@ import inspect
 
 def test_dht():
     # DHT transform of a constant sequence, based on DFT transform of the same
-    N = np.random.randint(1, 20)
-    c = np.random.random_sample()
-    x = c * np.ones((N, ))
+    N = 20
+    x = np.ones((N, ))
     X = dht(x)
     X1 = np.zeros((N, ))
-    X1[0] = c * N
+    X1[0] = N
     msg = f"{inspect.stack()[0][3]}: constant sequence test failed"
     np.testing.assert_allclose(X, X1, atol=1e-08, err_msg=msg)
     # DHT transform of a cosine, based on DFT transform of the same
-    N = np.random.randint(1, 20)
-    k = np.random.randint(N)
+    N = 20
+    k = 3
     c = 2.*np.pi*k/N
     i = np.arange(N)
     x = np.cos(c * i)
@@ -23,6 +22,29 @@ def test_dht():
     X1[k]  = N/2.
     X1[-k] = X1[-k] + N/2.
     msg = f"{inspect.stack()[0][3]}: cosine sequence test failed"
+    np.testing.assert_allclose(X, X1, atol=1e-08, err_msg=msg)
+    # DHT transform of a cosine: corner cases
+    N = 20
+    k = 0
+    c = 2.*np.pi*k/N
+    i = np.arange(N)
+    x = np.cos(c * i)
+    X = dht(x)
+    X1 = np.zeros((N, ))
+    X1[k]  = N/2.
+    X1[-k] = X1[-k] + N/2.
+    msg = f"{inspect.stack()[0][3]}: cosine corner case #1 test failed"
+    np.testing.assert_allclose(X, X1, atol=1e-08, err_msg=msg)
+    N = 20
+    k = 19
+    c = 2.*np.pi*k/N
+    i = np.arange(N)
+    x = np.cos(c * i)
+    X = dht(x)
+    X1 = np.zeros((N, ))
+    X1[k]  = N/2.
+    X1[-k] = X1[-k] + N/2.
+    msg = f"{inspect.stack()[0][3]}: cosine corner case #2 test failed"
     np.testing.assert_allclose(X, X1, atol=1e-08, err_msg=msg)
 
 

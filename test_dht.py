@@ -12,7 +12,6 @@ def test_dht():
     msg = f"{inspect.stack()[0][3]}: constant sequence test failed"
     np.testing.assert_allclose(X, X1, atol=1e-08, err_msg=msg)
     # DHT transform of a cosine, based on DFT transform of the same
-    N = 20
     k = 3
     c = 2.*np.pi*k/N
     i = np.arange(N)
@@ -24,7 +23,6 @@ def test_dht():
     msg = f"{inspect.stack()[0][3]}: cosine sequence test failed"
     np.testing.assert_allclose(X, X1, atol=1e-08, err_msg=msg)
     # DHT transform of a cosine: corner cases
-    N = 20
     k = 0
     c = 2.*np.pi*k/N
     i = np.arange(N)
@@ -50,17 +48,15 @@ def test_dht():
 
 def test_idht():
     # IDHT transform of an impulse at 0, based on IDFT transform of the same
-    N = np.random.randint(1, 20)
-    c = np.random.random_sample()
-    X = c * np.zeros((N, ))
-    X[0] = c * N
+    N = 20
+    X = np.zeros((N, ))
+    X[0] = N
     x = idht(X)
-    x1 = c * np.ones((N, ))
+    x1 = np.ones((N, ))
     msg = f"{inspect.stack()[0][3]}: impulse test failed"
     np.testing.assert_allclose(x, x1, atol=1e-08, err_msg=msg)
     # IDHT transform of sum of impulses at k and N-k,  based on IDFT transform of the same
-    N = np.random.randint(1, 20)
-    k = np.random.randint(N)
+    k = 3
     X = np.zeros((N, ))
     X[k]  = N/2.
     X[-k] = X[-k] + N/2.
@@ -69,6 +65,28 @@ def test_idht():
     i = np.arange(N)
     x1 = np.cos(c * i)
     msg = f"{inspect.stack()[0][3]}: sum of impulses test failed"
+    np.testing.assert_allclose(x, x1, atol=1e-08, err_msg=msg)
+    # IDHT transform of sum of impulses at k and N-k,  corner cases
+    k = 0
+    X = np.zeros((N, ))
+    X[k]  = N/2.
+    X[-k] = X[-k] + N/2.
+    x = idht(X)
+    c = 2.*np.pi*k/N
+    i = np.arange(N)
+    x1 = np.cos(c * i)
+    msg = f"{inspect.stack()[0][3]}: sum of impulses corner case #1 test failed"
+    np.testing.assert_allclose(x, x1, atol=1e-08, err_msg=msg)
+    # IDHT transform of sum of impulses at k and N-k,  corner cases
+    k = 19
+    X = np.zeros((N, ))
+    X[k]  = N/2.
+    X[-k] = X[-k] + N/2.
+    x = idht(X)
+    c = 2.*np.pi*k/N
+    i = np.arange(N)
+    x1 = np.cos(c * i)
+    msg = f"{inspect.stack()[0][3]}: sum of impulses corner case #2 test failed"
     np.testing.assert_allclose(x, x1, atol=1e-08, err_msg=msg)
 
 

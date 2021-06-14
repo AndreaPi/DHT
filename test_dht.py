@@ -91,7 +91,7 @@ def test_idht():
 
 
 def test_dht_conv():
-    N = np.random.randint(1, 20)
+    N = 20
     x = np.ones((N, ))
     y = np.copy(x)
     Z = dht_conv(x, y)
@@ -100,7 +100,7 @@ def test_dht_conv():
     np.testing.assert_allclose(Z, Z1, err_msg=msg)
 
 def test_conv():
-    N = np.random.randint(1, 20)
+    N = 20
     x = np.ones((N, ))
     y = np.copy(x)
     z = conv(x, y)
